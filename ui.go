@@ -144,7 +144,7 @@ func (u *ui) setDate(t time.Time) {
 	bindPrefString(u.mile3, quarterKey+".mile3", u.pref)
 	bindPrefString(u.mileDetail3, quarterKey+".info3", u.pref)
 
-	u.wTitle.SetText(fmt.Sprintf("Week %d, Q%d %d", (w-1)%13, q, y))
+	u.wTitle.SetText(fmt.Sprintf("Week %d, Q%d %d", ((w-1)%13)+1, q, y))
 	bindPrefString(u.area1, quarterKey+".mile1", u.pref)
 	bindPrefString(u.aim1, weekKey+".aim1", u.pref)
 	bindPrefBool(u.aimDone1, weekKey+".aim1.done", u.pref)
