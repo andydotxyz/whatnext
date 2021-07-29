@@ -12,7 +12,7 @@ import (
 )
 
 type ui struct {
-	pref fyne.Preferences
+	app  fyne.App
 	date time.Time
 
 	title, qTitle, wTitle *widget.Label
@@ -129,6 +129,7 @@ func (u *ui) makeWeekUI() fyne.CanvasObject {
 }
 
 func (u *ui) setDate(t time.Time) {
+	pref := u.app.Preferences()
 	u.date = t
 	dateKey := t.Format("20060102")
 	y, w := t.Add(time.Hour * 48).ISOWeek() // start the week 2 days earlier
@@ -137,35 +138,35 @@ func (u *ui) setDate(t time.Time) {
 	quarterKey := fmt.Sprintf("%dq%d", y, q)
 
 	u.qTitle.SetText(fmt.Sprintf("Quarter %d, %d", q, y))
-	bindPrefString(u.mile1, quarterKey+".mile1", u.pref)
-	bindPrefString(u.mileDetail1, quarterKey+".info1", u.pref)
-	bindPrefString(u.mile2, quarterKey+".mile2", u.pref)
-	bindPrefString(u.mileDetail2, quarterKey+".info2", u.pref)
-	bindPrefString(u.mile3, quarterKey+".mile3", u.pref)
-	bindPrefString(u.mileDetail3, quarterKey+".info3", u.pref)
+	bindPrefString(u.mile1, quarterKey+".mile1", pref)
+	bindPrefString(u.mileDetail1, quarterKey+".info1", pref)
+	bindPrefString(u.mile2, quarterKey+".mile2", pref)
+	bindPrefString(u.mileDetail2, quarterKey+".info2", pref)
+	bindPrefString(u.mile3, quarterKey+".mile3", pref)
+	bindPrefString(u.mileDetail3, quarterKey+".info3", pref)
 
 	u.wTitle.SetText(fmt.Sprintf("Week %d, Q%d %d", ((w-1)%13)+1, q, y))
-	bindPrefString(u.area1, quarterKey+".mile1", u.pref)
-	bindPrefString(u.aim1, weekKey+".aim1", u.pref)
-	bindPrefBool(u.aimDone1, weekKey+".aim1.done", u.pref)
-	bindPrefString(u.area2, quarterKey+".mile2", u.pref)
-	bindPrefString(u.aim2, weekKey+".aim2", u.pref)
-	bindPrefBool(u.aimDone2, weekKey+".aim2.done", u.pref)
-	bindPrefString(u.area3, quarterKey+".mile3", u.pref)
-	bindPrefString(u.aim3, weekKey+".aim3", u.pref)
-	bindPrefBool(u.aimDone3, weekKey+".aim3.done", u.pref)
+	bindPrefString(u.area1, quarterKey+".mile1", pref)
+	bindPrefString(u.aim1, weekKey+".aim1", pref)
+	bindPrefBool(u.aimDone1, weekKey+".aim1.done", pref)
+	bindPrefString(u.area2, quarterKey+".mile2", pref)
+	bindPrefString(u.aim2, weekKey+".aim2", pref)
+	bindPrefBool(u.aimDone2, weekKey+".aim2.done", pref)
+	bindPrefString(u.area3, quarterKey+".mile3", pref)
+	bindPrefString(u.aim3, weekKey+".aim3", pref)
+	bindPrefBool(u.aimDone3, weekKey+".aim3.done", pref)
 
 	u.title.SetText(t.Format("Mon, 02 Jan 2006"))
-	bindPrefString(u.goal, dateKey+".goal", u.pref)
-	bindPrefString(u.rem1, weekKey+".aim1", u.pref)
-	bindPrefString(u.top1, dateKey+".top1", u.pref)
-	bindPrefBool(u.done1, dateKey+".top1.done", u.pref)
-	bindPrefString(u.rem2, weekKey+".aim2", u.pref)
-	bindPrefString(u.top2, dateKey+".top2", u.pref)
-	bindPrefBool(u.done2, dateKey+".top2.done", u.pref)
-	bindPrefString(u.rem3, weekKey+".aim3", u.pref)
-	bindPrefString(u.top3, dateKey+".top3", u.pref)
-	bindPrefBool(u.done3, dateKey+".top3.done", u.pref)
+	bindPrefString(u.goal, dateKey+".goal", pref)
+	bindPrefString(u.rem1, weekKey+".aim1", pref)
+	bindPrefString(u.top1, dateKey+".top1", pref)
+	bindPrefBool(u.done1, dateKey+".top1.done", pref)
+	bindPrefString(u.rem2, weekKey+".aim2", pref)
+	bindPrefString(u.top2, dateKey+".top2", pref)
+	bindPrefBool(u.done2, dateKey+".top2.done", pref)
+	bindPrefString(u.rem3, weekKey+".aim3", pref)
+	bindPrefString(u.top3, dateKey+".top3", pref)
+	bindPrefBool(u.done3, dateKey+".top3.done", pref)
 }
 
 func (u *ui) makeUI() fyne.CanvasObject {
