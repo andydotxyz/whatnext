@@ -17,9 +17,9 @@ type ui struct {
 
 	title, qTitle, wTitle *widget.Label
 
-	goal, top1, top2, top3 *widget.Entry
-	rem1, rem2, rem3       *widget.Label
-	done1, done2, done3    *widget.Check
+	goal, top1, top2, top3        *widget.Entry
+	rem1, rem2, rem3              *widget.Label
+	doneGoal, done1, done2, done3 *widget.Check
 
 	area1, area2, area3          *widget.Label
 	aim1, aim2, aim3             *widget.Entry
@@ -31,6 +31,7 @@ type ui struct {
 
 func (u *ui) makeDayUI() fyne.CanvasObject {
 	u.goal = widget.NewEntry()
+	u.doneGoal = widget.NewCheck("", func(bool) {})
 	u.rem1 = widget.NewLabel("")
 	u.top1 = widget.NewEntry()
 	u.done1 = widget.NewCheck("", func(bool) {})
@@ -52,7 +53,7 @@ func (u *ui) makeDayUI() fyne.CanvasObject {
 	})
 	header := container.NewHBox(layout.NewSpacer(), prev, u.title, next, layout.NewSpacer())
 	return container.NewVBox(header,
-		widget.NewLabel("Goal"), u.goal,
+		container.NewBorder(widget.NewLabel("Highlight"), nil, u.doneGoal, nil, u.goal),
 		widget.NewLabel("Targets"),
 		container.NewBorder(nil, nil,
 			container.NewVBox(widget.NewLabel("1:"), u.done1), nil,
@@ -158,6 +159,7 @@ func (u *ui) setDate(t time.Time) {
 
 	u.title.SetText(t.Format("Mon, 02 Jan 2006"))
 	bindPrefString(u.goal, dateKey+".goal", pref)
+	bindPrefBool(u.doneGoal, dateKey+".goal.done", pref)
 	bindPrefString(u.rem1, weekKey+".aim1", pref)
 	bindPrefString(u.top1, dateKey+".top1", pref)
 	bindPrefBool(u.done1, dateKey+".top1.done", pref)
@@ -175,5 +177,6 @@ func (u *ui) makeUI() fyne.CanvasObject {
 		container.NewTabItemWithIcon("Week", theme.NewThemedResource(resourceWeekSvg), u.makeWeekUI()),
 		container.NewTabItemWithIcon("Day", theme.NewThemedResource(resourceDaySvg), u.makeDayUI()))
 	tabs.SetTabLocation(container.TabLocationLeading)
+	tabs.SelectIndex(2)
 	return tabs
 }
