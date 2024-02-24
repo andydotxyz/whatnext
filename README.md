@@ -1,6 +1,14 @@
 # What Next?
 
-A simple planner app that focuses on what to build next.
+A simple planner app that focuses the mind on making progress.
 
-<img src="img/screenshot.png" width="292px" />
+## Features
+
+- Quarter planning
+- Week summary
+- Daily goal setting and highlight
+- Habbit tracking for 3 habits per quarter
+- Sync to cloud (server not included)
+
+<img src="img/screenshot.png" width="5712px" />
 
