@@ -2,6 +2,7 @@
 //go:generate fyne bundle -o bundled.go -append img/day.svg
 //go:generate fyne bundle -o bundled.go -append img/week.svg
 //go:generate fyne bundle -o bundled.go -append img/quarter.svg
+//go:generate fyne bundle -o bundled.go -append img/today.svg
 
 package main
 
@@ -18,12 +19,6 @@ func main() {
 	cloud.Enable(a)
 	a.SetIcon(resourceIconPng)
 	w := a.NewWindow("What Next")
-
-	w.SetMainMenu(fyne.NewMainMenu(
-		fyne.NewMenu("File",
-			fyne.NewMenuItem("Sync...", func() {
-				cloud.ShowSettings(a, w)
-			}))))
 
 	u := &ui{app: a}
 	w.SetContent(u.makeUI())
