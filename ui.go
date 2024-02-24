@@ -7,6 +7,7 @@ import (
 	"fyne.io/cloud"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 )
@@ -29,6 +30,11 @@ type ui struct {
 
 	mile1, mile2, mile3                   *widget.Entry
 	mileDetail1, mileDetail2, mileDetail3 *widget.Entry
+
+	habit1, habit2, habit3                                        *widget.Entry
+	hDone11, hDone12, hDone13, hDone14, hDone15, hDone16, hDone17 *widget.Check
+	hDone21, hDone22, hDone23, hDone24, hDone25, hDone26, hDone27 *widget.Check
+	hDone31, hDone32, hDone33, hDone34, hDone35, hDone36, hDone37 *widget.Check
 }
 
 func (u *ui) makeDayUI() fyne.CanvasObject {
@@ -131,6 +137,15 @@ func (u *ui) refreshDate() (w, q, y int) {
 		u.next.OnTapped = func() {
 			u.setDate(u.date.Add(time.Hour * 24))
 		}
+	case 3:
+		u.title.SetText(fmt.Sprintf("Week %d habits (Q%d %d)", ((w-1)%13)+1, q, y))
+
+		u.prev.OnTapped = func() {
+			u.setDate(u.date.Add(time.Hour * -24 * 7))
+		}
+		u.next.OnTapped = func() {
+			u.setDate(u.date.Add(time.Hour * 24 * 7))
+		}
 	}
 
 	return
@@ -173,6 +188,84 @@ func (u *ui) setDate(t time.Time) {
 	bindPrefString(u.top3, dateKey+".top3", pref)
 	bindPrefBool(u.done3, dateKey+".top3.done", pref)
 
+	bindPrefString(u.habit1, quarterKey+".habit1", pref)
+	bindPrefBool(u.hDone11, weekKey+".habit1.done1", pref)
+	bindPrefBool(u.hDone12, weekKey+".habit1.done2", pref)
+	bindPrefBool(u.hDone13, weekKey+".habit1.done3", pref)
+	bindPrefBool(u.hDone14, weekKey+".habit1.done4", pref)
+	bindPrefBool(u.hDone15, weekKey+".habit1.done5", pref)
+	bindPrefBool(u.hDone16, weekKey+".habit1.done6", pref)
+	bindPrefBool(u.hDone17, weekKey+".habit1.done7", pref)
+	bindPrefString(u.habit2, quarterKey+".habit2", pref)
+	bindPrefBool(u.hDone21, weekKey+".habit2.done1", pref)
+	bindPrefBool(u.hDone22, weekKey+".habit2.done2", pref)
+	bindPrefBool(u.hDone23, weekKey+".habit2.done3", pref)
+	bindPrefBool(u.hDone24, weekKey+".habit2.done4", pref)
+	bindPrefBool(u.hDone25, weekKey+".habit2.done5", pref)
+	bindPrefBool(u.hDone26, weekKey+".habit2.done6", pref)
+	bindPrefBool(u.hDone27, weekKey+".habit2.done7", pref)
+	bindPrefString(u.habit3, quarterKey+".habit3", pref)
+	bindPrefBool(u.hDone31, weekKey+".habit3.done1", pref)
+	bindPrefBool(u.hDone32, weekKey+".habit3.done2", pref)
+	bindPrefBool(u.hDone33, weekKey+".habit3.done3", pref)
+	bindPrefBool(u.hDone34, weekKey+".habit3.done4", pref)
+	bindPrefBool(u.hDone35, weekKey+".habit3.done5", pref)
+	bindPrefBool(u.hDone36, weekKey+".habit3.done6", pref)
+	bindPrefBool(u.hDone37, weekKey+".habit3.done7", pref)
+}
+
+func (u *ui) makeHabitUI() fyne.CanvasObject {
+	u.habit1 = widget.NewEntry()
+	u.habit2 = widget.NewEntry()
+	u.habit3 = widget.NewEntry()
+	u.hDone11 = widget.NewCheck("", func(bool) {})
+	u.hDone12 = widget.NewCheck("", func(bool) {})
+	u.hDone13 = widget.NewCheck("", func(bool) {})
+	u.hDone14 = widget.NewCheck("", func(bool) {})
+	u.hDone15 = widget.NewCheck("", func(bool) {})
+	u.hDone16 = widget.NewCheck("", func(bool) {})
+	u.hDone17 = widget.NewCheck("", func(bool) {})
+	u.hDone21 = widget.NewCheck("", func(bool) {})
+	u.hDone22 = widget.NewCheck("", func(bool) {})
+	u.hDone23 = widget.NewCheck("", func(bool) {})
+	u.hDone24 = widget.NewCheck("", func(bool) {})
+	u.hDone25 = widget.NewCheck("", func(bool) {})
+	u.hDone26 = widget.NewCheck("", func(bool) {})
+	u.hDone27 = widget.NewCheck("", func(bool) {})
+	u.hDone31 = widget.NewCheck("", func(bool) {})
+	u.hDone32 = widget.NewCheck("", func(bool) {})
+	u.hDone33 = widget.NewCheck("", func(bool) {})
+	u.hDone34 = widget.NewCheck("", func(bool) {})
+	u.hDone35 = widget.NewCheck("", func(bool) {})
+	u.hDone36 = widget.NewCheck("", func(bool) {})
+	u.hDone37 = widget.NewCheck("", func(bool) {})
+
+	return container.NewVBox(
+		container.NewHBox(layout.NewSpacer(),
+			container.NewGridWithColumns(7,
+				widget.NewLabelWithStyle(" S ", fyne.TextAlignCenter, fyne.TextStyle{}),
+				widget.NewLabelWithStyle(" S ", fyne.TextAlignCenter, fyne.TextStyle{}),
+				widget.NewLabelWithStyle(" M ", fyne.TextAlignCenter, fyne.TextStyle{}),
+				widget.NewLabelWithStyle(" T ", fyne.TextAlignCenter, fyne.TextStyle{}),
+				widget.NewLabelWithStyle(" W ", fyne.TextAlignCenter, fyne.TextStyle{}),
+				widget.NewLabelWithStyle(" T ", fyne.TextAlignCenter, fyne.TextStyle{}),
+				widget.NewLabelWithStyle(" F ", fyne.TextAlignCenter, fyne.TextStyle{}))),
+		container.NewBorder(nil, nil, widget.NewLabel("1:"), nil,
+			u.habit1),
+		container.NewHBox(layout.NewSpacer(),
+			container.NewGridWithColumns(7,
+				u.hDone11, u.hDone12, u.hDone13, u.hDone14, u.hDone15, u.hDone16, u.hDone17)),
+		container.NewBorder(nil, nil, widget.NewLabel("2:"), nil,
+			u.habit2),
+		container.NewHBox(layout.NewSpacer(),
+			container.NewGridWithColumns(7,
+				u.hDone21, u.hDone22, u.hDone23, u.hDone24, u.hDone25, u.hDone26, u.hDone27)),
+		container.NewBorder(nil, nil, widget.NewLabel("3:"), nil,
+			u.habit3),
+		container.NewHBox(layout.NewSpacer(),
+			container.NewGridWithColumns(7,
+				u.hDone31, u.hDone32, u.hDone33, u.hDone34, u.hDone35, u.hDone36, u.hDone37)),
+	)
 }
 
 func (u *ui) makeUI() fyne.CanvasObject {
@@ -185,7 +278,8 @@ func (u *ui) makeUI() fyne.CanvasObject {
 	u.tabs = container.NewAppTabs(
 		container.NewTabItemWithIcon("Quarter", theme.NewThemedResource(resourceQuarterSvg), u.makeQuarterUI()),
 		container.NewTabItemWithIcon("Week", theme.NewThemedResource(resourceWeekSvg), u.makeWeekUI()),
-		container.NewTabItemWithIcon("Day", theme.NewThemedResource(resourceDaySvg), u.makeDayUI()))
+		container.NewTabItemWithIcon("Day", theme.NewThemedResource(resourceDaySvg), u.makeDayUI()),
+		container.NewTabItemWithIcon("Habits", theme.NewThemedResource(resourceHabitSvg), u.makeHabitUI()))
 	if fyne.CurrentDevice().IsMobile() {
 		u.tabs.SetTabLocation(container.TabLocationTrailing)
 	} else {
