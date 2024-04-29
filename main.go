@@ -3,6 +3,7 @@
 //go:generate fyne bundle -o bundled.go -append img/week.svg
 //go:generate fyne bundle -o bundled.go -append img/quarter.svg
 //go:generate fyne bundle -o bundled.go -append img/today.svg
+//go:generate fyne bundle -o bundled.go -append img/habit.svg
 
 package main
 
