@@ -276,10 +276,14 @@ func (u *ui) makeUI() fyne.CanvasObject {
 	date := container.NewBorder(nil, nil, u.prev, u.next, u.title)
 
 	u.tabs = container.NewAppTabs(
-		container.NewTabItemWithIcon("Quarter", theme.NewThemedResource(resourceQuarterSvg), u.makeQuarterUI()),
-		container.NewTabItemWithIcon("Week", theme.NewThemedResource(resourceWeekSvg), u.makeWeekUI()),
-		container.NewTabItemWithIcon("Day", theme.NewThemedResource(resourceDaySvg), u.makeDayUI()),
-		container.NewTabItemWithIcon("Habits", theme.NewThemedResource(resourceHabitSvg), u.makeHabitUI()))
+		container.NewTabItemWithIcon("Quarter", theme.NewThemedResource(resourceQuarterSvg),
+			container.NewVScroll(u.makeQuarterUI())),
+		container.NewTabItemWithIcon("Week", theme.NewThemedResource(resourceWeekSvg),
+			container.NewVScroll(u.makeWeekUI())),
+		container.NewTabItemWithIcon("Day", theme.NewThemedResource(resourceDaySvg),
+			container.NewVScroll(u.makeDayUI())),
+		container.NewTabItemWithIcon("Habits", theme.NewThemedResource(resourceHabitSvg),
+			container.NewVScroll(u.makeHabitUI())))
 	if fyne.CurrentDevice().IsMobile() {
 		u.tabs.SetTabLocation(container.TabLocationTrailing)
 	} else {
