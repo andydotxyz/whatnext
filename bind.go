@@ -30,4 +30,7 @@ func bindPrefString(w stringWid, key string, p fyne.Preferences) {
 	if e, ok := w.(*widget.Entry); ok {
 		e.Validator = nil
 	}
+	if e, ok := w.(*tapScrollLineEntry); ok {
+		e.Validator = nil
+	}
 }
