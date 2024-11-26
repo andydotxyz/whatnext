@@ -23,7 +23,7 @@ func main() {
 
 	u := &ui{app: a}
 	w.SetContent(u.makeUI())
-	w.Resize(fyne.NewSize(400, 300))
+	w.Resize(fyne.NewSize(380, 420))
 	u.setDate(time.Now())
 	w.ShowAndRun()
 }

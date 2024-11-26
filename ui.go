@@ -20,16 +20,19 @@ type ui struct {
 	title      *widget.Label
 	prev, next *widget.Button
 
-	goal, top1, top2, top3        *widget.Entry
+	goal, top1, top2              *widget.Entry
+	top3                          *tapScrollLineEntry
 	rem1, rem2, rem3              *widget.Label
 	doneGoal, done1, done2, done3 *widget.Check
 
 	area1, area2, area3          *widget.Label
-	aim1, aim2, aim3             *widget.Entry
+	aim1, aim2                   *widget.Entry
+	aim3                         *tapScrollLineEntry
 	aimDone1, aimDone2, aimDone3 *widget.Check
 
-	mile1, mile2, mile3                   *widget.Entry
-	mileDetail1, mileDetail2, mileDetail3 *widget.Entry
+	mile1, mile2, mile3      *widget.Entry
+	mileDetail1, mileDetail2 *widget.Entry
+	mileDetail3              *tapScrollLineEntry
 
 	habit1, habit2, habit3                                        *widget.Entry
 	hDone11, hDone12, hDone13, hDone14, hDone15, hDone16, hDone17 *widget.Check
@@ -37,7 +40,7 @@ type ui struct {
 	hDone31, hDone32, hDone33, hDone34, hDone35, hDone36, hDone37 *widget.Check
 }
 
-func (u *ui) makeDayUI() fyne.CanvasObject {
+func (u *ui) makeDayUI(s *container.Scroll) fyne.CanvasObject {
 	u.goal = widget.NewEntry()
 	u.doneGoal = widget.NewCheck("", func(bool) {})
 	u.rem1 = widget.NewLabel("")
@@ -47,7 +50,9 @@ func (u *ui) makeDayUI() fyne.CanvasObject {
 	u.top2 = widget.NewEntry()
 	u.done2 = widget.NewCheck("", func(bool) {})
 	u.rem3 = widget.NewLabel("")
-	u.top3 = widget.NewEntry()
+	u.top3 = &tapScrollLineEntry{}
+	u.top3.ExtendBaseWidget(u.top3)
+	u.top3.parent = s
 	u.done3 = widget.NewCheck("", func(bool) {})
 
 	return container.NewVBox(
@@ -64,13 +69,16 @@ func (u *ui) makeDayUI() fyne.CanvasObject {
 			container.NewVBox(u.rem3, u.top3)))
 }
 
-func (u *ui) makeQuarterUI() fyne.CanvasObject {
+func (u *ui) makeQuarterUI(s *container.Scroll) fyne.CanvasObject {
 	u.mile1 = widget.NewEntry()
 	u.mileDetail1 = widget.NewMultiLineEntry()
 	u.mile2 = widget.NewEntry()
 	u.mileDetail2 = widget.NewMultiLineEntry()
 	u.mile3 = widget.NewEntry()
-	u.mileDetail3 = widget.NewMultiLineEntry()
+	u.mileDetail3 = &tapScrollLineEntry{}
+	u.mileDetail3.ExtendBaseWidget(u.mileDetail3)
+	u.mileDetail3.MultiLine = true
+	u.mileDetail3.parent = s
 
 	return container.NewGridWithRows(3,
 		container.NewBorder(nil, nil, widget.NewLabel("1:"), nil,
@@ -81,7 +89,7 @@ func (u *ui) makeQuarterUI() fyne.CanvasObject {
 			container.NewBorder(u.mile3, nil, nil, nil, u.mileDetail3)))
 }
 
-func (u *ui) makeWeekUI() fyne.CanvasObject {
+func (u *ui) makeWeekUI(s *container.Scroll) fyne.CanvasObject {
 	u.area1 = widget.NewLabel("")
 	u.aim1 = widget.NewEntry()
 	u.aimDone1 = widget.NewCheck("", func(bool) {})
@@ -89,7 +97,9 @@ func (u *ui) makeWeekUI() fyne.CanvasObject {
 	u.aim2 = widget.NewEntry()
 	u.aimDone2 = widget.NewCheck("", func(bool) {})
 	u.area3 = widget.NewLabel("")
-	u.aim3 = widget.NewEntry()
+	u.aim3 = &tapScrollLineEntry{}
+	u.aim3.ExtendBaseWidget(u.aim3)
+	u.aim3.parent = s
 	u.aimDone3 = widget.NewCheck("", func(bool) {})
 
 	return container.NewVBox(
@@ -275,13 +285,19 @@ func (u *ui) makeUI() fyne.CanvasObject {
 	u.next = widget.NewButtonWithIcon("", theme.NavigateNextIcon(), nil)
 	date := container.NewBorder(nil, nil, u.prev, u.next, u.title)
 
+	qScroll := container.NewVScroll(nil)
+	qScroll.Content = u.makeQuarterUI(qScroll)
+	wScroll := container.NewVScroll(nil)
+	wScroll.Content = u.makeWeekUI(wScroll)
+	dScroll := container.NewVScroll(nil)
+	dScroll.Content = u.makeDayUI(dScroll)
 	u.tabs = container.NewAppTabs(
 		container.NewTabItemWithIcon("Quarter", theme.NewThemedResource(resourceQuarterSvg),
-			container.NewVScroll(u.makeQuarterUI())),
+			qScroll),
 		container.NewTabItemWithIcon("Week", theme.NewThemedResource(resourceWeekSvg),
-			container.NewVScroll(u.makeWeekUI())),
+			wScroll),
 		container.NewTabItemWithIcon("Day", theme.NewThemedResource(resourceDaySvg),
-			container.NewVScroll(u.makeDayUI())),
+			dScroll),
 		container.NewTabItemWithIcon("Habits", theme.NewThemedResource(resourceHabitSvg),
 			container.NewVScroll(u.makeHabitUI())))
 	if fyne.CurrentDevice().IsMobile() {
@@ -303,4 +319,26 @@ func (u *ui) makeUI() fyne.CanvasObject {
 	tools := container.NewBorder(nil, nil,
 		now, sync, container.NewCenter(date))
 	return container.NewBorder(tools, nil, nil, nil, u.tabs)
+}
+
+type tapScrollLineEntry struct {
+	widget.Entry
+
+	parent *container.Scroll
+}
+
+func (t *tapScrollLineEntry) Tapped(ev *fyne.PointEvent) {
+	t.Entry.Tapped(ev)
+
+	// TODO the VScroll listen for size
+	// if resized to smaller than min, check focused object
+	// if it's position is > 150 (for example) then scroll down
+
+	// force scrolling to the bottom in a trivial sort of way
+	go func() {
+		for i := 0; i < 5; i++ {
+			time.Sleep(25 * time.Millisecond)
+			t.parent.ScrollToBottom()
+		}
+	}()
 }
