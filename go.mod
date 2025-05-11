@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	fyne.io/cloud v0.0.0-20230911143224-fc981eeacb77
-	fyne.io/fyne/v2 v2.6.0-rc2
+	fyne.io/fyne/v2 v2.6.1
 	fynelabs/cloud v0.0.0-00010101000000-000000000000
 )
 
